@@ -21,13 +21,13 @@ int setupSdl() {
         SDL_WINDOW_SHOWN
     );
     if (window == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initiation window. Error %s", SDL_GetError());
+        SDL_Log("Failed to initiation window. Error %s", SDL_GetError());
         return 1;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize renderer. Error: %s", SDL_GetError());
+        SDL_Log("Failed to initialize renderer. Error: %s", SDL_GetError());
         return 1;
     }
 
@@ -55,52 +55,52 @@ int game(int argc, char *argv[]){
     SDL_Surface* surface = NULL;
     surface = SDL_LoadBMP("block.bmp");
     if (surface == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Unable to load image block.bmp! SDL Error: %s\n", SDL_GetError());
+        SDL_Log("Unable to load image block.bmp! SDL Error: %s\n", SDL_GetError());
         return 1;
     }
     SDL_Texture* block = NULL;
     block = SDL_CreateTextureFromSurface(renderer, surface);
     if (block == NULL) {
-        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Unable to load texture for image block.bmp! SDL Error: %s\n", SDL_GetError());
+        SDL_Log("Unable to load texture for image block.bmp! SDL Error: %s\n", SDL_GetError());
+        return 1;
+    }
+    SDL_Texture* block2 = NULL;
+    block2 = SDL_CreateTextureFromSurface(renderer, surface);
+    if (block2 == NULL) {
+        SDL_Log("Unable to load texture for image block.bmp! SDL Error: %s\n", SDL_GetError());
+        return 1;
+    }
+    SDL_Texture* block3 = NULL;
+    block3 = SDL_CreateTextureFromSurface(renderer, surface);
+    if (block3 == NULL) {
+        SDL_Log("Unable to load texture for image block.bmp! SDL Error: %s\n", SDL_GetError());
+        return 1;
+    }
+    SDL_Texture* block4 = NULL;
+    block4 = SDL_CreateTextureFromSurface(renderer, surface);
+    if (block4 == NULL) {
+        SDL_Log("Unable to load texture for image block.bmp! SDL Error: %s\n", SDL_GetError());
         return 1;
     }
     SDL_FreeSurface(surface);
 
     // Create SDL rect
-    SDL_Rect blockRect;
-    SDL_QueryTexture(block, NULL, NULL, &blockRect.w, &blockRect.h);
-    blockRect.x = WIDTH/2;
-    blockRect.y = HEIGHT/2;
+    SDL_Rect sourceRect = {0, 0, 32, 32};
+    SDL_Rect blockRect = {WIDTH/2, HEIGHT/2, 32, 32};
 
     //Create some additional rects for other tests
-    SDL_Rect smallRect;
-    SDL_QueryTexture(block, NULL, NULL, &smallRect.w, &smallRect.h);
-    smallRect.w = smallRect.w/2;
-    smallRect.h = smallRect.h/2;
-    smallRect.x = 50;
-    smallRect.y = HEIGHT/2;
+    SDL_Rect smallRect = {50, HEIGHT/2, 16, 16};
+    SDL_Rect bigRect = {400, HEIGHT/2, 64, 64};
 
-    SDL_Rect bigRect;
-    SDL_QueryTexture(block, NULL, NULL, &bigRect.w, &bigRect.h);
-    bigRect.w = bigRect.w*2;
-    bigRect.h = bigRect.h*2;
-    bigRect.x = 400;
-    bigRect.y = HEIGHT/2;
-
-    SDL_Rect partialRect;
-    SDL_QueryTexture(block, NULL, NULL, &partialRect.w, &partialRect.h);
-    partialRect.w = blockRect.w;
-    partialRect.h = blockRect.h;
-    partialRect.x = 150;
-    partialRect.y = HEIGHT/2;
+    SDL_Rect partialRect = {150, HEIGHT/2, 32, 32};
     SDL_Rect partialSourceRect = {0, 0, 16, 16};
     SDL_Rect partialSourceCorrectRect = {300, HEIGHT/2, 16, 16};
 
     while (!closed) {
         handleEvents();
-        SDL_RenderCopy(renderer, block, NULL, &blockRect);
-        SDL_RenderCopy(renderer, block, NULL, &smallRect);
-        SDL_RenderCopy(renderer, block, NULL, &bigRect);
+        SDL_RenderCopy(renderer, block, &sourceRect, &blockRect);
+        SDL_RenderCopy(renderer, block, &sourceRect, &smallRect);
+        SDL_RenderCopy(renderer, block, &sourceRect, &bigRect);
         SDL_RenderCopy(renderer, block, &partialSourceRect, &partialRect);
         SDL_RenderCopy(renderer, block, &partialSourceRect, &partialSourceCorrectRect);
         SDL_RenderPresent(renderer);
