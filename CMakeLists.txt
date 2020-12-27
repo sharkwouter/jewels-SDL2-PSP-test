@@ -5,7 +5,7 @@ project(jewels)
 add_executable(${PROJECT_NAME} main.c)
 
 IF(PLATFORM_PSP)
-        target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main SDL2 m GL ${PSP_LIBRARIES})
+        target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main SDL2 m GL pspvram ${PSP_LIBRARIES})
         create_pbp_file(
                 TARGET ${PROJECT_NAME}
                 ICON_PATH ICON0.PNG
