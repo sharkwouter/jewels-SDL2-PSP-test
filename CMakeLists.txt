@@ -17,7 +17,7 @@ IF(PLATFORM_PSP)
         pspge
         pspdebug
         psphprm
-
+	pspctrl
     )
 
     create_pbp_file(
