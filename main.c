@@ -18,7 +18,7 @@ int setupSdl() {
         SDL_WINDOWPOS_UNDEFINED,
         WIDTH,
         HEIGHT,
-        SDL_WINDOW_SHOWN
+        SDL_WINDOW_RESIZABLE
     );
     if (window == NULL) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initiation window. Error %s", SDL_GetError());
@@ -50,6 +50,8 @@ int main(int argc, char *argv[]) {
     if (setupSdl() != 0) {
         return 1;
     }
+
+    SDL_Texture * renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
     // load image
     SDL_Surface* surface = NULL;
@@ -98,13 +100,18 @@ int main(int argc, char *argv[]) {
 
     while (!closed) {
         handleEvents();
+
+        SDL_SetRenderTarget(renderer, renderTexture);
+
         SDL_RenderCopy(renderer, block, NULL, &blockRect);
         SDL_RenderCopy(renderer, block, NULL, &smallRect);
         SDL_RenderCopy(renderer, block, NULL, &bigRect);
         SDL_RenderCopy(renderer, block, &partialSourceRect, &partialRect);
         SDL_RenderCopy(renderer, block, &partialSourceRect, &partialSourceCorrectRect);
+
+        SDL_SetRenderTarget(renderer, NULL);
+        SDL_RenderCopy(renderer, renderTexture, NULL, NULL);
         SDL_RenderPresent(renderer);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
     }
     return 0;
