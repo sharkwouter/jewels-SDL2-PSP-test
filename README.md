@@ -8,6 +8,8 @@ This code shows a simple SDL2 example which runs on PSP, VITA and Linux. It uses
 
 ### PSP
 
+This one requires upstream SDL2.
+
 ```
 mkdir psp && cd psp
 psp-cmake ..
