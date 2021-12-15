@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    SDL_Texture * renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
+    SDL_Texture * renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
     // load image
     SDL_Surface* surface = NULL;
