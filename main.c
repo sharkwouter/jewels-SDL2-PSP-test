@@ -45,7 +45,7 @@ void handleEvents(){
     }
 }
 
-int game(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
     printf("Starting game\n");
     if (setupSdl() != 0) {
         return 1;
@@ -109,13 +109,3 @@ int game(int argc, char *argv[]){
     }
     return 0;
 }
-
-#ifdef __PSP__
-int SDL_main(int argc, char *argv[]) {
-    return game(argc, argv);
-}
-#else
-int main(int argc, char *argv[]) {
-    return game(argc, argv);
-}
-#endif
