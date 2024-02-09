@@ -4,21 +4,17 @@ project(jewels)
 
 add_executable(${PROJECT_NAME} main.c)
 
+include(FindPkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${SDL2_LIBRARIES}
+)
+
 IF(PLATFORM_PSP)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        SDL2main
-        SDL2
-        GL
-        pspvram
-        pspaudio
-        pspvfpu
-        pspdisplay
-        pspgu
-        pspge
-        pspdebug
-        psphprm
-        pspctrl
-    )
+    file(COPY platform/psp/ICON0.PNG DESTINATION ${CMAKE_BINARY_DIR})
 
     create_pbp_file(
         TARGET ${PROJECT_NAME}
@@ -26,29 +22,12 @@ IF(PLATFORM_PSP)
         BACKGROUND_PATH NULL
         PREVIEW_PATH NULL
         TITLE ${PROJECT_NAME}
-        BUILD_PRX
     )
-
-    file(COPY platform/psp/ICON0.PNG DESTINATION ${CMAKE_BINARY_DIR})
 ELSEIF(VITA)
     set(VITA_TITLEID "JWLT00001")
 
     include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        SDL2
-        m
-        SceAppUtil_stub
-        SceAudio_stub
-        SceCommonDialog_stub
-        SceCtrl_stub
-        SceDisplay_stub
-        SceGxm_stub
-        SceHid_stub
-        SceSysmodule_stub
-        SceTouch_stub
-        SceMotion_stub
-    )
     vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
     vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
         VERSION "01.00"
@@ -56,8 +35,6 @@ ELSEIF(VITA)
         FILE platform/vita/sce_sys sce_sys
         FILE block.bmp block.bmp
     )
-ELSE()
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 ENDIF()
 
 if(NOT DEFINED VITA)
